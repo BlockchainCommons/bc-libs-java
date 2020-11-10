@@ -1,0 +1,4 @@
+rootProject.name = "bc-crypto-base-android"
+include ":app"
+include ":bc-crypto-base-java"
+project(":bc-crypto-base-java").projectDir = file("../java")
