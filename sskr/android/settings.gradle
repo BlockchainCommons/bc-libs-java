@@ -1,0 +1,4 @@
+rootProject.name = "bc-sskr-android"
+include ":app"
+include ":bc-sskr-java"
+project(":bc-sskr-java").projectDir = file("../java")
