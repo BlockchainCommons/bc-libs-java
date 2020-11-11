@@ -32,7 +32,7 @@ static void shamir_random(uint8_t *buf, size_t count, void *ctx) {
 }
 
 // com/bc/shamir/ShamirException
-static bool throw_new_sskr_exception(JNIEnv *env, char *msg) {
+static bool throw_new_shamir_exception(JNIEnv *env, char *msg) {
     return throw_new(env, "com/bc/shamir/ShamirException", msg);
 }
 
@@ -41,27 +41,27 @@ Java_com_bc_shamir_ShamirJni_split_1secret(JNIEnv *env, jclass clazz, jshort thr
                                            jshort share_count, jbyteArray secret, jbyteArray output,
                                            jobject random_func) {
     if (secret == NULL) {
-        throw_new_sskr_exception(env, "secret is NULL");
+        throw_new_shamir_exception(env, "secret is NULL");
         return JNI_ERR;
     }
 
     if (output == NULL) {
-        throw_new_sskr_exception(env, "output is NULL");
+        throw_new_shamir_exception(env, "output is NULL");
         return JNI_ERR;
     }
 
     if (random_func == NULL) {
-        throw_new_sskr_exception(env, "random_func is NULL");
+        throw_new_shamir_exception(env, "random_func is NULL");
         return JNI_ERR;
     }
 
     if (threshold < 0 || share_count < 0) {
-        throw_new_sskr_exception(env, "threshold or share_count is negative number");
+        throw_new_shamir_exception(env, "threshold or share_count is negative number");
         return JNI_ERR;
     }
 
     if (threshold > UINT8_MAX || share_count > UINT8_MAX) {
-        throw_new_sskr_exception(env, "threshold or share_count is too large");
+        throw_new_shamir_exception(env, "threshold or share_count is too large");
         return JNI_ERR;
     }
 
@@ -96,27 +96,27 @@ Java_com_bc_shamir_ShamirJni_recover_1secret(JNIEnv *env, jclass clazz, jshort t
                                              jint share_length,
                                              jbyteArray secret) {
     if (indexes == NULL) {
-        throw_new_sskr_exception(env, "indexes is NULL");
+        throw_new_shamir_exception(env, "indexes is NULL");
         return JNI_ERR;
     }
 
     if (shares == NULL) {
-        throw_new_sskr_exception(env, "shares is NULL");
+        throw_new_shamir_exception(env, "shares is NULL");
         return JNI_ERR;
     }
 
     if (secret == NULL) {
-        throw_new_sskr_exception(env, "secret is NULL");
+        throw_new_shamir_exception(env, "secret is NULL");
         return JNI_ERR;
     }
 
     if (threshold < 0) {
-        throw_new_sskr_exception(env, "threshold is negative number");
+        throw_new_shamir_exception(env, "threshold is negative number");
         return JNI_ERR;
     }
 
     if (threshold > UINT8_MAX) {
-        throw_new_sskr_exception(env, "threshold is too large");
+        throw_new_shamir_exception(env, "threshold is too large");
         return JNI_ERR;
     }
 
