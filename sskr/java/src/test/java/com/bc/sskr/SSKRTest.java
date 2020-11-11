@@ -79,33 +79,22 @@ public class SSKRTest {
 
     @Test
     public void testSSKRError() throws Exception {
+
+        final SSKRGroupDescriptor[] groups = new SSKRGroupDescriptor[]{new SSKRGroupDescriptor(2,
+                                                                                               3)};
+        final byte[] secret = hex2Bytes("00112233445566778899aabbccddeeff");
+        final RandomFunc randomFunc = (len) -> new byte[]{0x01, 0x02};
+
         // check SSKR#countShares
         internalTest(() -> SSKR.countShares(2, null));
-        internalTest(() -> SSKR.countShares(-1,
-                                            new SSKRGroupDescriptor[]{new SSKRGroupDescriptor(2,
-                                                                                              3)}));
+        internalTest(() -> SSKR.countShares(-1, groups));
 
         // check SSKR#generate
-        internalTest(() -> SSKR.generate(-1,
-                                         new SSKRGroupDescriptor[]{new SSKRGroupDescriptor(2, 3)},
-                                         hex2Bytes("00112233445566778899aabbccddeeff"),
-                                         (len) -> new byte[]{0x01, 0x02}));
-        internalTest(() -> SSKR.generate(2,
-                                         null,
-                                         hex2Bytes("00112233445566778899aabbccddeeff"),
-                                         (len) -> new byte[]{0x01, 0x02}));
-        internalTest(() -> SSKR.generate(2,
-                                         new SSKRGroupDescriptor[]{new SSKRGroupDescriptor(2, 3)},
-                                         new byte[]{0x7F},
-                                         (len) -> new byte[]{0x01, 0x02}));
-        internalTest(() -> SSKR.generate(2,
-                                         new SSKRGroupDescriptor[]{new SSKRGroupDescriptor(2, 3)},
-                                         null,
-                                         (len) -> new byte[]{0x01, 0x02}));
-        internalTest(() -> SSKR.generate(2,
-                                         new SSKRGroupDescriptor[]{new SSKRGroupDescriptor(2, 3)},
-                                         hex2Bytes("00112233445566778899aabbccddeeff"),
-                                         null));
+        internalTest(() -> SSKR.generate(-1, groups, secret, randomFunc));
+        internalTest(() -> SSKR.generate(2, null, secret, randomFunc));
+        internalTest(() -> SSKR.generate(2, groups, new byte[]{0x7F}, randomFunc));
+        internalTest(() -> SSKR.generate(2, groups, null, randomFunc));
+        internalTest(() -> SSKR.generate(2, groups, secret, null));
 
         // check SSKR#combine
         internalTest(() -> SSKR.combine(null));

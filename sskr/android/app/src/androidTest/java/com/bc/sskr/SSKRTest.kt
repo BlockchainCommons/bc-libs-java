@@ -87,60 +87,23 @@ class SSKRTest {
             }
         }
 
+        val groups = arrayOf(SSKRGroupDescriptor(2, 3))
+        val secret = hex2Bytes("00112233445566778899aabbccddeeff")
+        val randomFunc: (Int) -> ByteArray = { byteArrayOf(0x01, 0x02) }
+
         // check SSKR#countShares
         internalTest { SSKR.countShares(2, null) }
-        internalTest { SSKR.countShares(-1, arrayOf(
-            SSKRGroupDescriptor(2, 3)
-        )) }
+        internalTest { SSKR.countShares(-1, groups) }
 
         // check SSKR#generate
-        internalTest {
-            SSKR.generate(
-                -1,
-                arrayOf(SSKRGroupDescriptor(2, 3)),
-                hex2Bytes("00112233445566778899aabbccddeeff")
-            ) { byteArrayOf(0x01, 0x02) }
-        }
-        internalTest {
-            SSKR.generate(
-                2,
-                null,
-                hex2Bytes("00112233445566778899aabbccddeeff")
-            ) { byteArrayOf(0x01, 0x02) }
-        }
-        internalTest {
-            SSKR.generate(2, arrayOf(
-                SSKRGroupDescriptor(
-                    2,
-                    3
-                )
-            ), byteArrayOf(0x7F)) {
-                byteArrayOf(
-                    0x01,
-                    0x02
-                )
-            }
-        }
-        internalTest {
-            SSKR.generate(
-                2,
-                arrayOf(SSKRGroupDescriptor(2, 3)),
-                null
-            ) { byteArrayOf(0x01, 0x02) }
-        }
-        internalTest {
-            SSKR.generate(
-                2,
-                arrayOf(SSKRGroupDescriptor(2, 3)),
-                hex2Bytes("00112233445566778899aabbccddeeff"),
-                null
-            )
-        }
+        internalTest { SSKR.generate(-1, groups, secret, randomFunc) }
+        internalTest { SSKR.generate(2, null, secret, randomFunc) }
+        internalTest { SSKR.generate(2, groups, byteArrayOf(0x7F), randomFunc) }
+        internalTest { SSKR.generate(2, groups, null, randomFunc) }
+        internalTest { SSKR.generate(2, groups, secret, null) }
 
         // check SSKR#combine
-        internalTest {
-            SSKR.combine(null)
-        }
+        internalTest { SSKR.combine(null) }
         internalTest {
             SSKR.combine(
                 arrayOf(

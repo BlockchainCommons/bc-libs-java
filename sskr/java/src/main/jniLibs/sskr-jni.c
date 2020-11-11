@@ -92,6 +92,11 @@ Java_com_bc_sskr_SSKRJni_SSKR_1generate(JNIEnv *env, jclass clazz, jint group_th
                                         jobjectArray groups, jbyteArray secret,
                                         jintArray share_length, jbyteArray output,
                                         jobject random_func) {
+    if (group_threshold < 0) {
+        throw_new_sskr_exception(env, "group_threshold is negative number");
+        return JNI_ERR;
+    }
+
     if (groups == NULL) {
         throw_new_sskr_exception(env, "groups is NULL");
         return JNI_ERR;
@@ -164,6 +169,11 @@ Java_com_bc_sskr_SSKRJni_SSKR_1combine(JNIEnv *env, jclass clazz, jobjectArray s
 
     if (secret == NULL) {
         throw_new_sskr_exception(env, "secret is NULL");
+        return JNI_ERR;
+    }
+
+    if (share_length < 0 || share_count < 0) {
+        throw_new_sskr_exception(env, "share_length or share_count is negative number");
         return JNI_ERR;
     }
 
