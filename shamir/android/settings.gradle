@@ -1,0 +1,4 @@
+rootProject.name = "bc-shamir-android"
+include ":app"
+include ":bc-shamir-java"
+project(":bc-shamir-java").projectDir = file("../java")

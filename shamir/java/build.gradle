@@ -1,0 +1,27 @@
+apply plugin: 'java-library'
+
+def ver='1.0.0'
+
+group 'com.bc.shamir'
+version ver
+
+repositories {
+    jcenter()
+    google()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    testImplementation "junit:junit:4.12"
+}
+
+tasks.withType(Test) {
+    doFirst {
+        exec {
+            commandLine "scripts/build.sh"
+        }
+    }
+    systemProperty "java.library.path", "$buildDir/release"
+}
