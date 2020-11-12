@@ -24,9 +24,22 @@ is_osx() {
   [[ "$(uname)" == "Darwin" ]]
 }
 
-install_java8_mac() {
-  FILE=OpenJDK8U-jdk_x64_mac_hotspot_8u265b01.pkg
+install_java() {
+  FILE=OpenJDK8U-jdk_x64_linux_hotspot_8u265b01.tar.gz
+  if is_osx; then
+    FILE=OpenJDK8U-jdk_x64_mac_hotspot_8u265b01.pkg
+  fi
   wget -O "$FILE" -q "https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u265-b01/$FILE"
-  sudo installer -pkg $FILE -target /
-  rm "$FILE"
+
+  if is_osx; then
+    sudo installer -pkg $FILE -target /
+  else
+    sudo mkdir -p /usr/java
+    mv $FILE /usr/java
+    cd /usr/java
+    tar -xzvf $FILE
+    sudo update-alternatives --install "/usr/bin/java" "java" "/usr/java/jdk8u265-b01/bin/java" 1
+    sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/java/jdk8u265-b01/bin/javac" 1
+  fi
+  rm -f "$FILE"
 }

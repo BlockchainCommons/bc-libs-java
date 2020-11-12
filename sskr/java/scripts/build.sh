@@ -6,8 +6,6 @@ sskr_lib_name="libbc-sskr-jni.dylib"
 out_dir=build/release
 jni_md_dir="darwin"
 if is_osx; then
-  java_home=$(/usr/libexec/java_home 2>/dev/null)
-  export JAVA_HOME=$java_home
   export CC="clang"
   export CXX="clang++"
 else
@@ -16,9 +14,15 @@ else
 
   export CC="clang-10"
   export CXX="clang++-10"
-  if [ "$JAVA_HOME" == "" ]; then
-    export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
-  fi
+fi
+
+java_home="/usr/java/jdk8u265-b01"
+if is_osx; then
+  java_home=$(/usr/libexec/java_home 2>/dev/null)
+fi
+
+if [ "$JAVA_HOME" == "" ]; then
+  export JAVA_HOME=$java_home
 fi
 
 # Install bc-crypto-base

@@ -18,10 +18,5 @@ dependencies {
 }
 
 tasks.withType(Test) {
-    doFirst {
-        exec {
-            commandLine "scripts/build.sh"
-        }
-    }
     systemProperty "java.library.path", "$buildDir/release"
 }

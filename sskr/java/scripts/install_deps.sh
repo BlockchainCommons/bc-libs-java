@@ -6,7 +6,7 @@ deps=(automake make)
 
 if ! is_osx; then
   # Additional dependencies for Linux
-  deps+=(wget libc++-10-dev libc++abi-10-dev openjdk-8-jdk)
+  deps+=(wget libc++-10-dev libc++abi-10-dev)
 fi
 
 echo "Checking and installing dependencies '${deps[*]}'..."
@@ -16,15 +16,17 @@ for dep in "${deps[@]}"; do
   check_dep $dep
 done
 
-if is_osx; then
-  java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
-  if [[ $java_version != "1.8.0_265" ]]; then
-    echo "Installing JDK 8..."
-    install_java8_mac || exit
-  else
-    echo "JDK 8 has been installed at $(/usr/libexec/java_home 2>/dev/null)"
-  fi
+# Check for JDK
+java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
+if [[ $java_version < "1.8.0" ]]; then
+  echo "Installing JDK 8..."
+  install_java || exit
 else
+  echo "JDK 8 has been installed at $JAVA_HOME"
+fi
+
+# Check for clang10 on Linux
+if ! is_osx; then
   if clang-10 --version 2>/dev/null; then
     echo "clang-10 already installed"
   else

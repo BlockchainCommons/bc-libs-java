@@ -5,6 +5,8 @@ This document gives the instruction for installing the Blockchain Commons Shamir
 > We add utility script for installing all system dependencies, you can find it at `java/scripts/install_deps.sh`
 If you want to do it manually by yourself, make sure all of following dependencies are installed correctly. 
 
+[Adopt Open JDK 1.8](https://github.com/AdoptOpenJDK/openjdk8-binaries/releases) is recommended for both MacOS and Linux.
+
 ### Linux
 > Following packages can be installed via `apt-get`
 
@@ -12,13 +14,11 @@ If you want to do it manually by yourself, make sure all of following dependenci
 - make
 - libc++-10-dev
 - libc++abi-10-dev
-- openjdk-8-jdk
 - clang-10
 
 ### MacOS
 - automake
 - make
-- [Adopt Open JDK 1.8](https://github.com/AdoptOpenJDK/openjdk8-binaries/releases)
 
 ## Android
 > Working directory: `/android`
@@ -41,20 +41,23 @@ $ ./gradlew clean assembleRelease
 ## Java (Web app/ Desktop app)
 > Working directory: `/java`
 
-### Testing
-```console
-$ ./gradlew clean test
-```
-
-### Bundling
-
-Run following command for building the dynamic library file.
+### Build native library
+Run following command for building the native library.
 ```console
 $ sudo ./scripts/build.sh
 ```
 
-> The dynamic library file would be found at `build/release`. You need to install it into `java.library.path` for JVM can load it at runtime.
+> The native library file would be found at `build/release`. You need to install it into `java.library.path` for JVM can load it at runtime.
 
+### Testing
+The test tasks automatically points JVM `java.library.path` to `build/release` so make sure you already built the native library before executing the test.
+
+Run following command for executing test cases.
+```console
+$ ./gradlew test
+```
+
+### Bundling
 The `jar` file will be bundled by running
 ```console
 $ ./gradlew assemble
