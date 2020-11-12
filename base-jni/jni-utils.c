@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 static jclass find_jclass(JNIEnv *env, char *className) {
     jclass clazz = (*env)->FindClass(env, className);
