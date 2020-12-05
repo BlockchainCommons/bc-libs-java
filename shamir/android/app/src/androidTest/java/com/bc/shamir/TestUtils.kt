@@ -17,3 +17,16 @@ fun hex2Bytes(hex: String): ByteArray {
     }
     return bytes
 }
+
+inline fun <reified T : Throwable> assertThrows(
+    msg: String = "test failed",
+    callable: () -> Unit
+): T {
+    try {
+        callable()
+        throw AssertionError(msg)
+    } catch (e: Throwable) {
+        if (e is T) return e
+        throw e
+    }
+}

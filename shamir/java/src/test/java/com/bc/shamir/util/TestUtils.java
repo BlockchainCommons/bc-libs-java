@@ -1,4 +1,4 @@
-package com.bc.shamir;
+package com.bc.shamir.util;
 
 import java.math.BigInteger;
 
@@ -25,5 +25,23 @@ public class TestUtils {
         System.arraycopy(a, 0, c, 0, a.length);
         System.arraycopy(b, 0, c, a.length, b.length);
         return c;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Throwable> T assertThrows(String msg,
+                                                       Class<T> expectedError,
+                                                       Callable callable) {
+        try {
+            callable.call();
+            throw new AssertionError(msg);
+        } catch (Throwable e) {
+            if (expectedError.isAssignableFrom(e.getClass()))
+                return (T) e;
+            throw e;
+        }
+    }
+
+    public static <T extends Throwable> T assertThrows(Class<T> expectedError, Callable callable) {
+        return assertThrows("test failed", expectedError, callable);
     }
 }

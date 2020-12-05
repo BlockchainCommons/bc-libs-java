@@ -5,7 +5,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.RuntimeException
 
 @RunWith(AndroidJUnit4::class)
 class ShamirTest {
@@ -47,27 +46,20 @@ class ShamirTest {
 
     @Test
     fun testShamirError() {
-        fun internalTest(func: () -> Unit) {
-            try {
-                func()
-                throw RuntimeException("test is failed")
-            } catch (ignore: ShamirException) {
-            }
-        }
 
         val randomFunc: (Int) -> ByteArray = { len -> byteArrayOf(0x00, 0x01) }
         val secret = hex2Bytes("00112233445566778899aabbccddeeff")
 
-        internalTest { Shamir.splitSecret(-1, 5, secret, randomFunc) }
-        internalTest { Shamir.splitSecret(3, -1, secret, randomFunc) }
-        internalTest { Shamir.splitSecret(256, 4, secret, randomFunc) }
-        internalTest { Shamir.splitSecret(2, 32267, null, randomFunc) }
-        internalTest { Shamir.splitSecret(2, 3, null, randomFunc) }
-        internalTest { Shamir.splitSecret(2, 3, secret, null) }
+        assertThrows<ShamirException> { Shamir.splitSecret(-1, 5, secret, randomFunc) }
+        assertThrows<ShamirException> { Shamir.splitSecret(3, -1, secret, randomFunc) }
+        assertThrows<ShamirException> { Shamir.splitSecret(256, 4, secret, randomFunc) }
+        assertThrows<ShamirException> { Shamir.splitSecret(2, 32267, null, randomFunc) }
+        assertThrows<ShamirException> { Shamir.splitSecret(2, 3, null, randomFunc) }
+        assertThrows<ShamirException> { Shamir.splitSecret(2, 3, secret, null) }
 
-        internalTest { Shamir.recoverSecret(null) }
-        internalTest { Shamir.recoverSecret(arrayOf()) }
-        internalTest {
+        assertThrows<ShamirException> { Shamir.recoverSecret(null) }
+        assertThrows<ShamirException> { Shamir.recoverSecret(arrayOf()) }
+        assertThrows<ShamirException> {
             Shamir.recoverSecret(
                 arrayOf(
                     ShamirShare(0, hex2Bytes("3dc2ff5b2a3b08193a2b1809a2b38091")),
