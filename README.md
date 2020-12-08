@@ -1,6 +1,6 @@
 # Blockchain Commons Java Library
 
-Blockchain Commons publishes several open source C libraries that are useful in cryptocurrency wallets. This project wraps some of those libraries in opinionated Java frameworks that work across Android devices and computers run JVM. 
+Blockchain Commons publishes several open source C libraries that are useful in cryptocurrency wallets. **Blockchain Commons Java Library** wraps some of those libraries in opinionated Java frameworks that work across Android devices and computers that run JVM. 
 
 ## Status — Work-in-Progress
 
@@ -60,6 +60,12 @@ The following people directly contributed to this repository. You can add your n
 | ----------------- | ------------------- | ------------------------------------------------- | ------------------------------------- | -------------------------------------------------- |
 | Christopher Allen | Principal Architect | [@ChristopherA](https://github.com/ChristopherA) | \<ChristopherA@LifeWithAlacrity.com\> | FDFE 14A5 4ECB 30FC 5D22  74EF F8D3 6C91 3574 05ED |
 | Hieu Pham | Software Engineer | [@jollyjoker992](https://github.com/jollyjoker992) | \<hieupham@bitmark.com\> | D14E 5669 6799 6C69 4B22 E13A 7E80 8AC5 0392 AD3A |
+
+### Contributing Sponsor
+
+**Blockchain Commons Java Library** was produced as a collaboration between Blockchain Commons and one of our patrons, Bitmark: Bitmark wrote the wrappers based on Blockchain Commons' specifications and reference libraries. Blockchain Commons is dedicated to not just creating open infrastructure on our own, but also coordinating the work of other companies in benefiting the Commons. Thanks to Bitmark for being the first company to work directly with us in this manner.
+
+![](images/logos/bitmark-logo.png)
 
 ## Responsible Disclosure
 
