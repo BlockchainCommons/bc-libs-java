@@ -1,5 +1,8 @@
 # Blockchain Commons Java Library
-### _by Hieu Pham and Christopher Allen_
+
+### _by [Hiếu Pham](https://www.github.com/jollyjoker992) and [Christopher Allen](https://www.github.com/ChristopherA)_
+
+* <img src="https://github.com/BlockchainCommons/crypto-commons/blob/master/images/logos/crypto-commons-super-simple.png" width=16 valign="bottom">&nbsp;&nbsp; ***part of the [crypto commons](https://github.com/BlockchainCommons/crypto-commons/blob/master/README.md) technology family***
 
 Blockchain Commons publishes several open source C libraries that are useful in cryptocurrency wallets. **Blockchain Commons Java Library** wraps some of those libraries in opinionated Java frameworks that work across Android devices and computers that run JVM. 
 
