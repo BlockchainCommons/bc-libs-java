@@ -1,6 +1,6 @@
 # Blockchain Commons Java Library
 
-### _by [Hiếu Pham](https://www.github.com/jollyjoker992) and [Christopher Allen](https://www.github.com/ChristopherA)_
+### _by [Hiếu Phạm](https://www.github.com/jollyjoker992) and [Christopher Allen](https://www.github.com/ChristopherA)_
 
 * <img src="https://github.com/BlockchainCommons/crypto-commons/blob/master/images/logos/crypto-commons-super-simple.png" width=16 valign="bottom">&nbsp;&nbsp; ***part of the [crypto commons](https://github.com/BlockchainCommons/crypto-commons/blob/master/README.md) technology family***
 
@@ -62,7 +62,7 @@ The following people directly contributed to this repository. You can add your n
 | Name              | Role                | Github                                            | Email                                 | GPG Fingerprint                                    |
 | ----------------- | ------------------- | ------------------------------------------------- | ------------------------------------- | -------------------------------------------------- |
 | Christopher Allen | Principal Architect | [@ChristopherA](https://github.com/ChristopherA) | \<ChristopherA@LifeWithAlacrity.com\> | FDFE 14A5 4ECB 30FC 5D22  74EF F8D3 6C91 3574 05ED |
-| Hieu Pham | Software Engineer | [@jollyjoker992](https://github.com/jollyjoker992) | \<hieupham@bitmark.com\> | D14E 5669 6799 6C69 4B22 E13A 7E80 8AC5 0392 AD3A |
+| Hiếu Phạm | Software Engineer | [@jollyjoker992](https://github.com/jollyjoker992) | \<hieupham@bitmark.com\> | D14E 5669 6799 6C69 4B22 E13A 7E80 8AC5 0392 AD3A |
 
 ### Contributing Sponsor
 
