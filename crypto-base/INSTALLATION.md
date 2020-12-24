@@ -12,11 +12,12 @@ If you want to do it manually by yourself, make sure all of following dependenci
 
 - automake
 - make
-- libc++-10-dev
-- libc++abi-10-dev
-- clang-10
+- libc++-10-dev (or above)
+- libc++abi-10-dev (or above)
+- clang-10 (or above)
 
 ### MacOS
+> Following packages can be installed via `brew`
 - automake
 - make
 
@@ -47,14 +48,14 @@ Run following command for building the native library.
 $ sudo ./scripts/build.sh
 ```
 
-> The native library file would be found at `build/release`. You need to install it into `java.library.path` for JVM can load it at runtime.
+> The native library file would be found at `src/main/libs`. You need to install it into `java.library.path` for JVM can load it at runtime.
 
 ### Testing
-The test tasks automatically points JVM `java.library.path` to `build/release` so make sure you already built the native library before executing the test.
+The test tasks automatically points JVM `java.library.path` to `src/main/libs` so make sure you already built the native library before executing the test.
 
 Run following command for executing test cases.
 ```console
-$ ./gradlew test
+$ ./gradlew test --info
 ```
 
 ### Bundling
