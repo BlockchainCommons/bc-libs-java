@@ -18,5 +18,5 @@ dependencies {
 }
 
 tasks.withType(Test) {
-    systemProperty "java.library.path", "$buildDir/release"
+    systemProperty "java.library.path", "$projectDir/src/main/libs"
 }

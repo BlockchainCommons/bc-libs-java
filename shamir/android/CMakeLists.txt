@@ -11,22 +11,25 @@ project(bc-shamir)
 # and CMake builds them for you. When you build your app, Gradle
 # automatically packages shared libraries with your APK.
 
-# define source files
-file(GLOB_RECURSE BC_CRYPTO_BASE "../../deps/bc-crypto-base/src/*.c")
+get_filename_component(PARENT_ROOT_DIR ../../ ABSOLUTE)
+get_filename_component(ROOT_DIR ${CMAKE_SOURCE_DIR} DIRECTORY)
 
-file(GLOB_RECURSE BC_SHAMIR "../../deps/bc-shamir/src/*.c")
+# define source files
+file(GLOB BC_CRYPTO_BASE ${PARENT_ROOT_DIR}/deps/bc-crypto-base/src/*.c)
+file(GLOB BC_SHAMIR ${PARENT_ROOT_DIR}/deps/bc-shamir/src/*.c)
+set(TARGET_INCLUDE_DIRS ${PARENT_ROOT_DIR}/base-jni ${PARENT_ROOT_DIR}/deps/bc-shamir/src)
 
 # define include dir
-include_directories(../../deps/bc-crypto-base/src ../../deps/bc-shamir/src /usr/local/include)
+include_directories(/usr/local/include)
 
 # compile
 add_library(bc-crypto-base STATIC ${BC_CRYPTO_BASE})
 
 add_library(bc-shamir STATIC ${BC_SHAMIR})
 
-add_library(jni-utils STATIC ../../base-jni/jni-utils.c)
+add_library(jni-utils STATIC ${PARENT_ROOT_DIR}/base-jni/jni-utils.c)
 
-add_library(bc-shamir-jni SHARED ../java/src/main/jniLibs/shamir-jni.c)
+add_library(bc-shamir-jni SHARED ${ROOT_DIR}/java/src/main/jniLibs/shamir-jni.c)
 
 # link
 target_link_libraries(bc-shamir bc-crypto-base)
@@ -34,3 +37,6 @@ target_link_libraries(bc-shamir bc-crypto-base)
 target_link_libraries(bc-shamir-jni jni-utils)
 
 target_link_libraries(bc-shamir-jni bc-shamir)
+
+# target headers
+target_include_directories(bc-shamir-jni PRIVATE ${TARGET_INCLUDE_DIRS})

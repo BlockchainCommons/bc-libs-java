@@ -1,6 +1,6 @@
 #include <jni.h>
-#include "../../../../../deps/bc-shamir/src/bc-shamir.h"
-#include "../../../../../base-jni/jni-utils.c"
+#include <bc-shamir.h>
+#include <jni-utils.c>
 #include <limits.h>
 
 typedef struct Shamir_ctx {
