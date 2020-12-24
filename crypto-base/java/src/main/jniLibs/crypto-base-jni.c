@@ -1,6 +1,6 @@
 #include <jni.h>
-#include "../../../../../deps/bc-crypto-base/src/bc-crypto-base.h"
-#include "../../../../../base-jni/jni-utils.c"
+#include <bc-crypto-base.h>
+#include <jni-utils.c>
 
 // com/bc/cryptobase/CryptoBaseException
 static bool throw_new_crypto_base_exception(JNIEnv *env, char *msg) {

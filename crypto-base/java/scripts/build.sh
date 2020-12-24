@@ -1,41 +1,57 @@
 #!/bin/bash
 
+set -e
+
 source scripts/helper.sh
 
-sskr_lib_name="libbc-crypto-base-jni.dylib"
-out_dir=build/release
-jni_md_dir="darwin"
+echo 'Cleanup...'
+./scripts/cleanup.sh
+
+PARENT_ROOT_DIR=../../
+LIB_NAME="libbc-crypto-base-jni.dylib"
+OUT_DIR=src/main/libs
+JNI_MD_DIR="darwin"
 if is_osx; then
   export CC="clang"
   export CXX="clang++"
 else
-  sskr_lib_name="libbc-crypto-base-jni.so"
-  jni_md_dir="linux"
+  LIB_NAME="libbc-crypto-base-jni.so"
+  JNI_MD_DIR="linux"
 
   export CC="clang-10"
   export CXX="clang++-10"
 
 fi
 
-java_home="/usr/java/jdk8u265-b01"
+J_HOME="/usr/local/java/jdk8u265-b01"
 if is_osx; then
-  java_home=$(/usr/libexec/java_home 2>/dev/null)
+  J_HOME=$(/usr/libexec/java_home 2>/dev/null)
 fi
 
-if [ "$JAVA_HOME" == "" ]; then
-  export JAVA_HOME=$java_home
+if [ -z "$JAVA_HOME" ]; then
+  export JAVA_HOME=$J_HOME
 fi
+echo "${JAVA_HOME:?}"
 
 # Install bc-crypto-base
-pushd ../../deps/bc-crypto-base || exit
+pushd $PARENT_ROOT_DIR/deps/bc-crypto-base
 ./configure
 make clean
 make CFLAGS=-fPIC check
 sudo make CFLAGS=-fPIC install
-popd || exit
+popd
 
 # Install jni lib
-echo "Building $sskr_lib_name..."
-mkdir -p $out_dir
-$CC -I$JAVA_HOME/include -I$JAVA_HOME/include/$jni_md_dir -fexceptions -frtti -shared -fPIC src/main/jniLibs/*.c ../../base-jni/*.c ../../deps/bc-crypto-base/src/libbc-crypto-base.a -o $out_dir/$sskr_lib_name || exit
-echo "Done. Checkout the release file at $out_dir/$sskr_lib_name"
+echo "Building $LIB_NAME..."
+mkdir -p $OUT_DIR
+$CC -I"$JAVA_HOME/include" \
+  -I"$JAVA_HOME/include/$JNI_MD_DIR" \
+  -I"${PARENT_ROOT_DIR}/base-jni" \
+  -I"${PARENT_ROOT_DIR}/deps/bc-crypto-base/src" \
+  -fexceptions -frtti -shared -fPIC \
+  src/main/jniLibs/*.c \
+  $PARENT_ROOT_DIR/base-jni/*.c \
+  $PARENT_ROOT_DIR/deps/bc-crypto-base/src/libbc-crypto-base.a \
+  -o \
+  $OUT_DIR/$LIB_NAME
+echo "Done. Checkout the release file at $OUT_DIR/$LIB_NAME"
