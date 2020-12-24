@@ -11,15 +11,17 @@ project(bc-sskr)
 # and CMake builds them for you. When you build your app, Gradle
 # automatically packages shared libraries with your APK.
 
+get_filename_component(PARENT_ROOT_DIR ../../ ABSOLUTE)
+get_filename_component(ROOT_DIR ${CMAKE_SOURCE_DIR} DIRECTORY)
+
 # define source files
-file(GLOB_RECURSE BC_CRYPTO_BASE "../../deps/bc-crypto-base/src/*.c")
-
-file(GLOB_RECURSE BC_SHAMIR "../../deps/bc-shamir/src/*.c")
-
-file(GLOB_RECURSE BC_SSKR "../../deps/bc-sskr/src/*.c")
+file(GLOB BC_CRYPTO_BASE ${PARENT_ROOT_DIR}/deps/bc-crypto-base/src/*.c)
+file(GLOB BC_SHAMIR ${PARENT_ROOT_DIR}/deps/bc-shamir/src/*.c)
+file(GLOB BC_SSKR ${PARENT_ROOT_DIR}/deps/bc-sskr/src/*.c)
+set(TARGET_INCLUDE_DIRS ${PARENT_ROOT_DIR}/base-jni ${PARENT_ROOT_DIR}/deps/bc-sskr/src)
 
 # define include dir
-include_directories(../../deps/bc-crypto-base/src ../../deps/bc-shamir/src ../../deps/bc-sskr/src /usr/local/include)
+include_directories(/usr/local/include)
 
 # compile
 add_library(bc-crypto-base STATIC ${BC_CRYPTO_BASE})
@@ -40,3 +42,6 @@ target_link_libraries(bc-sskr bc-shamir)
 target_link_libraries(bc-sskr-jni jni-utils)
 
 target_link_libraries(bc-sskr-jni bc-sskr)
+
+# target headers
+target_include_directories(bc-sskr-jni PRIVATE ${TARGET_INCLUDE_DIRS})

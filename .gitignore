@@ -100,5 +100,8 @@ output.json
 
 .idea
 .DS_Store
+crypto-base/java/src/main/libs
+shamir/java/src/main/libs
+sskr/java/src/main/libs
 
 # End of Specific for project

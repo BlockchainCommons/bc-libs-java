@@ -1,6 +1,6 @@
 #include <jni.h>
-#include "../../../../../deps/bc-sskr/src/bc-sskr.h"
-#include "../../../../../base-jni/jni-utils.c"
+#include <bc-sskr.h>
+#include <jni-utils.c>
 
 typedef struct SSKR_ctx {
     JNIEnv *env;
