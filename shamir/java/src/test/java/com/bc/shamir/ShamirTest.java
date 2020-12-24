@@ -4,11 +4,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.concurrent.Callable;
 import java.util.stream.IntStream;
 
-import static com.bc.shamir.TestUtils.bytes2Hex;
-import static com.bc.shamir.TestUtils.hex2Bytes;
+import static com.bc.shamir.util.TestUtils.assertThrows;
+import static com.bc.shamir.util.TestUtils.bytes2Hex;
+import static com.bc.shamir.util.TestUtils.hex2Bytes;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -39,16 +39,16 @@ public class ShamirTest {
 
         // test Shamir#recoverSecret
         ShamirShare[] recoveredShares = IntStream.range(0, shares.length)
-                                                 .filter(i -> i != 1)
-                                                 .mapToObj(i -> shares[i])
-                                                 .toArray(ShamirShare[]::new);
+                .filter(i -> i != 1)
+                .mapToObj(i -> shares[i])
+                .toArray(ShamirShare[]::new);
         final byte[] recoveredSecret = Shamir.recoverSecret(recoveredShares);
         assertEquals(bytes2Hex(secret), bytes2Hex(recoveredSecret));
 
         ShamirShare[] badRecoveredShares = IntStream.range(0, recoveredShares.length)
-                                                    .filter(i -> i != 0)
-                                                    .mapToObj(i -> recoveredShares[i])
-                                                    .toArray(ShamirShare[]::new);
+                .filter(i -> i != 0)
+                .mapToObj(i -> recoveredShares[i])
+                .toArray(ShamirShare[]::new);
         final byte[] badRecoveredSecret = Shamir.recoverSecret(badRecoveredShares);
         assertNotEquals(bytes2Hex(secret), bytes2Hex(badRecoveredSecret));
 
@@ -59,26 +59,18 @@ public class ShamirTest {
         RandomFunc randomFunc = len -> new byte[]{0x00, 0x01};
         byte[] secret = hex2Bytes("00112233445566778899aabbccddeeff");
 
-        internalTest(() -> Shamir.splitSecret((short) -1, (short) 5, secret, randomFunc));
-        internalTest(() -> Shamir.splitSecret((short) 3, (short) -1, secret, randomFunc));
-        internalTest(() -> Shamir.splitSecret((short) 256, (short) 4, secret, randomFunc));
-        internalTest(() -> Shamir.splitSecret((short) 2, (short) 32267, null, randomFunc));
-        internalTest(() -> Shamir.splitSecret((short) 2, (short) 3, null, randomFunc));
-        internalTest(() -> Shamir.splitSecret((short) 2, (short) 3, secret, null));
+        assertThrows(ShamirException.class, () -> Shamir.splitSecret((short) -1, (short) 5, secret, randomFunc));
+        assertThrows(ShamirException.class, () -> Shamir.splitSecret((short) 3, (short) -1, secret, randomFunc));
+        assertThrows(ShamirException.class, () -> Shamir.splitSecret((short) 256, (short) 4, secret, randomFunc));
+        assertThrows(ShamirException.class, () -> Shamir.splitSecret((short) 2, (short) 32267, null, randomFunc));
+        assertThrows(ShamirException.class, () -> Shamir.splitSecret((short) 2, (short) 3, null, randomFunc));
+        assertThrows(ShamirException.class, () -> Shamir.splitSecret((short) 2, (short) 3, secret, null));
 
-        internalTest(() -> Shamir.recoverSecret(null));
-        internalTest(() -> Shamir.recoverSecret(new ShamirShare[]{}));
-        internalTest(() -> Shamir.recoverSecret(new ShamirShare[]{
+        assertThrows(ShamirException.class, () -> Shamir.recoverSecret(null));
+        assertThrows(ShamirException.class, () -> Shamir.recoverSecret(new ShamirShare[]{}));
+        assertThrows(ShamirException.class, () -> Shamir.recoverSecret(new ShamirShare[]{
                 new ShamirShare((short) 0, hex2Bytes("3dc2ff5b2a3b08193a2b1809a2b38091")),
                 new ShamirShare((short) 1, hex2Bytes("c7fe6b576e7f4c5df6e7d4c5e6f")),
                 new ShamirShare((short) 2, hex2Bytes("d2ba"))}));
-    }
-
-    private void internalTest(Callable callable) throws Exception {
-        try {
-            callable.call();
-            throw new RuntimeException("test is failed");
-        } catch (ShamirException ignore) {
-        }
     }
 }

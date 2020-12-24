@@ -5,11 +5,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.util.Arrays;
-import java.util.concurrent.Callable;
 import java.util.stream.IntStream;
 
-import static com.bc.sskr.TestUtils.bytes2Hex;
-import static com.bc.sskr.TestUtils.hex2Bytes;
+import static com.bc.sskr.util.TestUtils.assertThrows;
+import static com.bc.sskr.util.TestUtils.bytes2Hex;
+import static com.bc.sskr.util.TestUtils.hex2Bytes;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnit4.class)
@@ -56,20 +56,20 @@ public class SSKRTest {
 
         // check SSKR#combine
         SSKRShare[] flattenShares = Arrays.stream(shareGroup)
-                                          .flatMap(Arrays::stream)
-                                          .toArray(SSKRShare[]::new);
+                .flatMap(Arrays::stream)
+                .toArray(SSKRShare[]::new);
         SSKRShare[] recoveredShares = IntStream.range(0, flattenShares.length)
-                                               .filter(i -> i != 1 && i != 3 && i != 6)
-                                               .mapToObj(i -> flattenShares[i])
-                                               .toArray(SSKRShare[]::new);
+                .filter(i -> i != 1 && i != 3 && i != 6)
+                .mapToObj(i -> flattenShares[i])
+                .toArray(SSKRShare[]::new);
 
         byte[] recoveredSecret = SSKR.combine(recoveredShares);
         assertEquals(bytes2Hex(secret), bytes2Hex(recoveredSecret));
 
         SSKRShare[] invalidRecoveredShares = IntStream.range(0, recoveredShares.length)
-                                                      .filter(i -> i != 3)
-                                                      .mapToObj(i -> recoveredShares[i])
-                                                      .toArray(SSKRShare[]::new);
+                .filter(i -> i != 3)
+                .mapToObj(i -> recoveredShares[i])
+                .toArray(SSKRShare[]::new);
         try {
             SSKR.combine(invalidRecoveredShares);
             throw new RuntimeException("check SSKR#combine failed");
@@ -81,33 +81,25 @@ public class SSKRTest {
     public void testSSKRError() throws Exception {
 
         final SSKRGroupDescriptor[] groups = new SSKRGroupDescriptor[]{new SSKRGroupDescriptor(2,
-                                                                                               3)};
+                3)};
         final byte[] secret = hex2Bytes("00112233445566778899aabbccddeeff");
         final RandomFunc randomFunc = (len) -> new byte[]{0x01, 0x02};
 
         // check SSKR#countShares
-        internalTest(() -> SSKR.countShares(2, null));
-        internalTest(() -> SSKR.countShares(-1, groups));
+        assertThrows(SSKRException.class, () -> SSKR.countShares(2, null));
+        assertThrows(SSKRException.class, () -> SSKR.countShares(-1, groups));
 
         // check SSKR#generate
-        internalTest(() -> SSKR.generate(-1, groups, secret, randomFunc));
-        internalTest(() -> SSKR.generate(2, null, secret, randomFunc));
-        internalTest(() -> SSKR.generate(2, groups, new byte[]{0x7F}, randomFunc));
-        internalTest(() -> SSKR.generate(2, groups, null, randomFunc));
-        internalTest(() -> SSKR.generate(2, groups, secret, null));
+        assertThrows(SSKRException.class, () -> SSKR.generate(-1, groups, secret, randomFunc));
+        assertThrows(SSKRException.class, () -> SSKR.generate(2, null, secret, randomFunc));
+        assertThrows(SSKRException.class, () -> SSKR.generate(2, groups, new byte[]{0x7F}, randomFunc));
+        assertThrows(SSKRException.class, () -> SSKR.generate(2, groups, null, randomFunc));
+        assertThrows(SSKRException.class, () -> SSKR.generate(2, groups, secret, null));
 
         // check SSKR#combine
-        internalTest(() -> SSKR.combine(null));
-        internalTest(() -> SSKR.combine(new SSKRShare[]{new SSKRShare(new byte[]{0x00, 0x01, 0x02}),
+        assertThrows(SSKRException.class, () -> SSKR.combine(null));
+        assertThrows(SSKRException.class, () -> SSKR.combine(new SSKRShare[]{new SSKRShare(new byte[]{0x00, 0x01, 0x02}),
                 new SSKRShare(new byte[]{})}));
 
-    }
-
-    private void internalTest(Callable callable) throws Exception {
-        try {
-            callable.call();
-            throw new RuntimeException("test is failed");
-        } catch (SSKRException ignore) {
-        }
     }
 }

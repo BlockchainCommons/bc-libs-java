@@ -1,10 +1,9 @@
 package com.bc.sskr
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.RuntimeException
 
 @RunWith(AndroidJUnit4::class)
 class SSKRTest {
@@ -19,7 +18,7 @@ class SSKRTest {
         )
         val expectedShareCount = 8
         val shareCount = SSKR.countShares(groupThreshold, groups)
-        Assert.assertEquals(expectedShareCount, shareCount)
+        assertEquals(expectedShareCount, shareCount)
 
         // check SSKR#generate
         val secret = hex2Bytes("00112233445566778899aabbccddeeff")
@@ -51,7 +50,7 @@ class SSKRTest {
         for (i in shareGroup.indices) {
             val shares = shareGroup[i]
             for (j in shares.indices) {
-                Assert.assertEquals(
+                assertEquals(
                     expectedShareData[i][j],
                     bytes2Hex(shareGroup[i][j].data)
                 )
@@ -62,7 +61,7 @@ class SSKRTest {
         val recoveredShares = shareGroup.flatten().toMutableList()
             .filterIndexed { index, _ -> index !in arrayOf(1, 3, 6) }
         val recoveredSecret = SSKR.combine(recoveredShares.toTypedArray())
-        Assert.assertEquals(
+        assertEquals(
             bytes2Hex(secret),
             bytes2Hex(recoveredSecret)
         )
@@ -79,32 +78,24 @@ class SSKRTest {
     @Test
     fun testSSKRError() {
 
-        fun internalTest(func: () -> Unit) {
-            try {
-                func()
-                throw RuntimeException("test is failed")
-            } catch (ignore: SSKRException) {
-            }
-        }
-
         val groups = arrayOf(SSKRGroupDescriptor(2, 3))
         val secret = hex2Bytes("00112233445566778899aabbccddeeff")
         val randomFunc: (Int) -> ByteArray = { byteArrayOf(0x01, 0x02) }
 
         // check SSKR#countShares
-        internalTest { SSKR.countShares(2, null) }
-        internalTest { SSKR.countShares(-1, groups) }
+        assertThrows<SSKRException> { SSKR.countShares(2, null) }
+        assertThrows<SSKRException> { SSKR.countShares(-1, groups) }
 
         // check SSKR#generate
-        internalTest { SSKR.generate(-1, groups, secret, randomFunc) }
-        internalTest { SSKR.generate(2, null, secret, randomFunc) }
-        internalTest { SSKR.generate(2, groups, byteArrayOf(0x7F), randomFunc) }
-        internalTest { SSKR.generate(2, groups, null, randomFunc) }
-        internalTest { SSKR.generate(2, groups, secret, null) }
+        assertThrows<SSKRException> { SSKR.generate(-1, groups, secret, randomFunc) }
+        assertThrows<SSKRException> { SSKR.generate(2, null, secret, randomFunc) }
+        assertThrows<SSKRException> { SSKR.generate(2, groups, byteArrayOf(0x7F), randomFunc) }
+        assertThrows<SSKRException> { SSKR.generate(2, groups, null, randomFunc) }
+        assertThrows<SSKRException> { SSKR.generate(2, groups, secret, null) }
 
         // check SSKR#combine
-        internalTest { SSKR.combine(null) }
-        internalTest {
+        assertThrows<SSKRException> { SSKR.combine(null) }
+        assertThrows<SSKRException> {
             SSKR.combine(
                 arrayOf(
                     SSKRShare(byteArrayOf(0x00, 0x01, 0x02)),
