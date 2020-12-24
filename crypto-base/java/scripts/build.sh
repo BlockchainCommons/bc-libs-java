@@ -38,7 +38,6 @@ pushd $PARENT_ROOT_DIR/deps/bc-crypto-base
 ./configure
 make clean
 make CFLAGS=-fPIC check
-sudo make CFLAGS=-fPIC install
 popd
 
 # Install jni lib
