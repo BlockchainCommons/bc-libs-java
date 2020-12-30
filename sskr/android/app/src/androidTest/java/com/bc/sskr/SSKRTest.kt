@@ -10,19 +10,19 @@ class SSKRTest {
 
     @Test
     fun testSSKRValidFlow() {
-        // check SSKR#countShares
+        // check SSKR#countShards
         val groupThreshold = 2
         val groups = arrayOf(
             SSKRGroupDescriptor(2, 3),
             SSKRGroupDescriptor(3, 5)
         )
-        val expectedShareCount = 8
-        val shareCount = SSKR.countShares(groupThreshold, groups)
-        assertEquals(expectedShareCount, shareCount)
+        val expectedShardsCount = 8
+        val shardsCount = SSKR.countShards(groupThreshold, groups)
+        assertEquals(expectedShardsCount, shardsCount)
 
         // check SSKR#generate
         val secret = hex2Bytes("00112233445566778899aabbccddeeff")
-        val shareGroup = SSKR.generate(groupThreshold, groups, secret)
+        val shardGroup = SSKR.generate(groupThreshold, groups, secret)
         { len ->
             var b: Byte = 0
             val ret = ByteArray(len)
@@ -33,7 +33,7 @@ class SSKRTest {
             ret
         }
 
-        val expectedShareData =
+        val expectedShardData =
             arrayOf(
                 arrayOf(
                     "1100110100bae4b1dda4b58697b3a291802c3d0e1f",
@@ -47,29 +47,29 @@ class SSKRTest {
                     "1100111204df736b4c1d0c3f2e637241509584b7a6"
                 )
             )
-        for (i in shareGroup.indices) {
-            val shares = shareGroup[i]
-            for (j in shares.indices) {
+        for (i in shardGroup.indices) {
+            val shards = shardGroup[i]
+            for (j in shards.indices) {
                 assertEquals(
-                    expectedShareData[i][j],
-                    bytes2Hex(shareGroup[i][j].data)
+                    expectedShardData[i][j],
+                    bytes2Hex(shardGroup[i][j].data)
                 )
             }
         }
 
         // check SSKR#combine
-        val recoveredShares = shareGroup.flatten().toMutableList()
+        val recoveredShards = shardGroup.flatten().toMutableList()
             .filterIndexed { index, _ -> index !in arrayOf(1, 3, 6) }
-        val recoveredSecret = SSKR.combine(recoveredShares.toTypedArray())
+        val recoveredSecret = SSKR.combine(recoveredShards.toTypedArray())
         assertEquals(
             bytes2Hex(secret),
             bytes2Hex(recoveredSecret)
         )
 
-        val invalidRecoveredShares =
-            recoveredShares.toMutableList().filterIndexed { index, _ -> index != 3 }
+        val invalidRecoveredShards =
+            recoveredShards.toMutableList().filterIndexed { index, _ -> index != 3 }
         try {
-            SSKR.combine(invalidRecoveredShares.toTypedArray())
+            SSKR.combine(invalidRecoveredShards.toTypedArray())
             throw RuntimeException("check SSKR#combine failed")
         } catch (ignore: SSKRException) {
         }
@@ -82,9 +82,9 @@ class SSKRTest {
         val secret = hex2Bytes("00112233445566778899aabbccddeeff")
         val randomFunc: (Int) -> ByteArray = { byteArrayOf(0x01, 0x02) }
 
-        // check SSKR#countShares
-        assertThrows<SSKRException> { SSKR.countShares(2, null) }
-        assertThrows<SSKRException> { SSKR.countShares(-1, groups) }
+        // check SSKR#countShards
+        assertThrows<SSKRException> { SSKR.countShards(2, null) }
+        assertThrows<SSKRException> { SSKR.countShards(-1, groups) }
 
         // check SSKR#generate
         assertThrows<SSKRException> { SSKR.generate(-1, groups, secret, randomFunc) }
@@ -98,8 +98,8 @@ class SSKRTest {
         assertThrows<SSKRException> {
             SSKR.combine(
                 arrayOf(
-                    SSKRShare(byteArrayOf(0x00, 0x01, 0x02)),
-                    SSKRShare(byteArrayOf())
+                    SSKRShard(byteArrayOf(0x00, 0x01, 0x02)),
+                    SSKRShard(byteArrayOf())
                 )
             )
         }

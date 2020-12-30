@@ -73,7 +73,7 @@ static bool throw_new_sskr_exception(JNIEnv *env, char *msg) {
 }
 
 JNIEXPORT jint JNICALL
-Java_com_bc_sskr_SSKRJni_SSKR_1count_1shares(JNIEnv *env, jclass clazz, jint group_threshold,
+Java_com_bc_sskr_SSKRJni_SSKR_1count_1shards(JNIEnv *env, jclass clazz, jint group_threshold,
                                              jobjectArray groups) {
     if (groups == NULL) {
         throw_new_sskr_exception(env, "groups is NULL");
@@ -90,7 +90,7 @@ Java_com_bc_sskr_SSKRJni_SSKR_1count_1shares(JNIEnv *env, jclass clazz, jint gro
 JNIEXPORT jint JNICALL
 Java_com_bc_sskr_SSKRJni_SSKR_1generate(JNIEnv *env, jclass clazz, jint group_threshold,
                                         jobjectArray groups, jbyteArray secret,
-                                        jintArray share_length, jbyteArray output,
+                                        jintArray shard_length, jbyteArray output,
                                         jobject random_func) {
     if (group_threshold < 0) {
         throw_new_sskr_exception(env, "group_threshold is negative number");
@@ -107,8 +107,8 @@ Java_com_bc_sskr_SSKRJni_SSKR_1generate(JNIEnv *env, jclass clazz, jint group_th
         return JNI_ERR;
     }
 
-    if (share_length == NULL) {
-        throw_new_sskr_exception(env, "share_length is NULL");
+    if (shard_length == NULL) {
+        throw_new_sskr_exception(env, "shard_length is NULL");
         return JNI_ERR;
     }
 
@@ -126,8 +126,8 @@ Java_com_bc_sskr_SSKRJni_SSKR_1generate(JNIEnv *env, jclass clazz, jint group_th
     jint c_group_length = (*env)->GetArrayLength(env, groups);
     uint8_t *c_secret = to_uint8_t_array(env, secret);
     jint c_secret_length = (*env)->GetArrayLength(env, secret);
-    jint c_share_length_len = (*env)->GetArrayLength(env, share_length);
-    size_t *c_share_length = (size_t *) malloc(sizeof(size_t));
+    jint c_shard_length_len = (*env)->GetArrayLength(env, shard_length);
+    size_t *c_shard_length = (size_t *) malloc(sizeof(size_t));
     jint c_output_length = (*env)->GetArrayLength(env, output);
     uint8_t *c_output = calloc(c_output_length, sizeof(uint8_t));
 
@@ -140,7 +140,7 @@ Java_com_bc_sskr_SSKRJni_SSKR_1generate(JNIEnv *env, jclass clazz, jint group_th
                             c_group_length,
                             c_secret,
                             c_secret_length,
-                            c_share_length,
+                            c_shard_length,
                             c_output,
                             c_output_length,
                             c_ctx,
@@ -148,22 +148,22 @@ Java_com_bc_sskr_SSKRJni_SSKR_1generate(JNIEnv *env, jclass clazz, jint group_th
     );
 
     copy_to_jbyteArray(env, output, c_output, c_output_length);
-    copy_to_jintArray(env, share_length, c_share_length, c_share_length_len);
+    copy_to_jintArray(env, shard_length, c_shard_length, c_shard_length_len);
 
     free(c_groups);
     free(c_secret);
     free(c_output);
-    free(c_share_length);
+    free(c_shard_length);
     free(c_ctx);
     return ret;
 }
 
 JNIEXPORT jint JNICALL
-Java_com_bc_sskr_SSKRJni_SSKR_1combine(JNIEnv *env, jclass clazz, jobjectArray shares,
-                                       jint share_length, jint share_count,
+Java_com_bc_sskr_SSKRJni_SSKR_1combine(JNIEnv *env, jclass clazz, jobjectArray shards,
+                                       jint shard_length, jint shards_count,
                                        jbyteArray secret) {
-    if (shares == NULL) {
-        throw_new_sskr_exception(env, "shares is NULL");
+    if (shards == NULL) {
+        throw_new_sskr_exception(env, "shards is NULL");
         return JNI_ERR;
     }
 
@@ -172,24 +172,24 @@ Java_com_bc_sskr_SSKRJni_SSKR_1combine(JNIEnv *env, jclass clazz, jobjectArray s
         return JNI_ERR;
     }
 
-    if (share_length < 0 || share_count < 0) {
-        throw_new_sskr_exception(env, "share_length or share_count is negative number");
+    if (shard_length < 0 || shards_count < 0) {
+        throw_new_sskr_exception(env, "shard_length or shards_count is negative number");
         return JNI_ERR;
     }
 
-    uint8_t **c_shares = to_uint8_t_2dimension_array(env, shares);
+    uint8_t **c_shards = to_uint8_t_2dimension_array(env, shards);
     jint c_secret_length = (*env)->GetArrayLength(env, secret);
     uint8_t *c_secret = calloc(c_secret_length, sizeof(uint8_t));
 
-    int ret = sskr_combine((const uint8_t **) c_shares,
-                           share_length,
-                           share_count,
+    int ret = sskr_combine((const uint8_t **) c_shards,
+                           shard_length,
+                           shards_count,
                            c_secret,
                            c_secret_length);
 
     copy_to_jbyteArray(env, secret, c_secret, c_secret_length);
 
-    free(c_shares);
+    free(c_shards);
     free(c_secret);
     return ret;
 }

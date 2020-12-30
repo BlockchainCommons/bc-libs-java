@@ -6,14 +6,14 @@ import java.util.Set;
 
 public class SSKR {
 
-    public static int countShares(int groupThreshold, SSKRGroupDescriptor[] groups) {
-        int ret = SSKRJni.SSKR_count_shares(groupThreshold, groups);
+    public static int countShards(int groupThreshold, SSKRGroupDescriptor[] groups) {
+        int ret = SSKRJni.SSKR_count_shards(groupThreshold, groups);
         if (ret >= 0)
             return ret;
-        throw new SSKRException("SSKR countShares error: " + ret);
+        throw new SSKRException("SSKR countShards error: " + ret);
     }
 
-    public static SSKRShare[][] generate(int groupThreshold,
+    public static SSKRShard[][] generate(int groupThreshold,
                                          SSKRGroupDescriptor[] groups,
                                          byte[] secret,
                                          RandomFunc randomFunc) {
@@ -22,7 +22,7 @@ public class SSKR {
         }
 
         int shareLength = secret.length + 5;
-        int shareCount = countShares(groupThreshold, groups);
+        int shareCount = countShards(groupThreshold, groups);
         int outputLength = shareCount * shareLength;
 
         int[] resultShareLength = new int[1];
@@ -39,14 +39,14 @@ public class SSKR {
             throw new SSKRException("SSKR generate error");
         }
 
-        SSKRShare[][] groupShares = new SSKRShare[groups.length][];
+        SSKRShard[][] groupShares = new SSKRShard[groups.length][];
         int offset = 0;
         for (int i = 0; i < groups.length; i++) {
             SSKRGroupDescriptor group = groups[i];
-            SSKRShare[] shares = new SSKRShare[group.getCount()];
+            SSKRShard[] shares = new SSKRShard[group.getCount()];
             for (int j = 0; j < group.getCount(); j++) {
                 byte[] data = Arrays.copyOfRange(output, offset, offset + shareLength);
-                shares[j] = new SSKRShare(data);
+                shares[j] = new SSKRShard(data);
                 offset += shareLength;
             }
             groupShares[i] = shares;
@@ -55,7 +55,7 @@ public class SSKR {
         return groupShares;
     }
 
-    public static byte[] combine(SSKRShare[] shares) {
+    public static byte[] combine(SSKRShard[] shares) {
         if (shares == null) {
             throw new SSKRException("NULL params is not accepted");
         }
@@ -66,7 +66,7 @@ public class SSKR {
         }
 
         Set<Integer> shareLengths = new HashSet<>();
-        for (SSKRShare share : shares) {
+        for (SSKRShard share : shares) {
             shareLengths.add(share.getData().length);
         }
         if (shareLengths.size() != 1) {

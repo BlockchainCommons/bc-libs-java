@@ -1,10 +1,10 @@
 package com.bc.sskr;
 
-public class SSKRShare {
+public class SSKRShard {
 
     private final byte[] data;
 
-    public SSKRShare(byte[] data) {
+    public SSKRShard(byte[] data) {
         this.data = data;
     }
 
