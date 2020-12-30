@@ -30,9 +30,9 @@ add_library(bc-shamir STATIC ${BC_SHAMIR})
 
 add_library(bc-sskr STATIC ${BC_SSKR})
 
-add_library(jni-utils STATIC ../../base-jni/jni-utils.c)
+add_library(jni-utils STATIC ${PARENT_ROOT_DIR}/base-jni/jni-utils.c)
 
-add_library(bc-sskr-jni SHARED ../java/src/main/jniLibs/sskr-jni.c)
+add_library(bc-sskr-jni SHARED ${ROOT_DIR}/java/src/main/jniLibs/sskr-jni.c)
 
 # link
 target_link_libraries(bc-shamir bc-crypto-base)
