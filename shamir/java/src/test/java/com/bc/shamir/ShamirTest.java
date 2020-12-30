@@ -19,7 +19,7 @@ public class ShamirTest {
     public void testShamirValidFlow() {
         // test Shamir#splitSecret
         byte[] secret = hex2Bytes("00112233445566778899aabbccddeeff");
-        ShamirShare[] shares = Shamir.splitSecret((short) 2, (short) 3, secret, len -> {
+        ShamirShard[] shards = Shamir.splitSecret((short) 2, (short) 3, secret, len -> {
             byte b = 0;
             final byte[] ret = new byte[len];
             for (int i = 0; i < len; i++) {
@@ -29,27 +29,27 @@ public class ShamirTest {
             return ret;
         });
 
-        String[] expectedShares = new String[]{"3dc2ff5b2a3b08193a2b1809a2b38091",
+        String[] expectedShards = new String[]{"3dc2ff5b2a3b08193a2b1809a2b38091",
                 "c7fe6b576e7f4c5df6e7d4c5e6f7c4d5",
                 "d2bacc43a2b38091b9a89b8a2a3b0819"};
-        for (int i = 0; i < shares.length; i++) {
-            assertEquals((short) i, shares[i].getIndex());
-            assertEquals(expectedShares[i], bytes2Hex(shares[i].getData()));
+        for (int i = 0; i < shards.length; i++) {
+            assertEquals((short) i, shards[i].getIndex());
+            assertEquals(expectedShards[i], bytes2Hex(shards[i].getData()));
         }
 
         // test Shamir#recoverSecret
-        ShamirShare[] recoveredShares = IntStream.range(0, shares.length)
+        ShamirShard[] recoveredShards = IntStream.range(0, shards.length)
                 .filter(i -> i != 1)
-                .mapToObj(i -> shares[i])
-                .toArray(ShamirShare[]::new);
-        final byte[] recoveredSecret = Shamir.recoverSecret(recoveredShares);
+                .mapToObj(i -> shards[i])
+                .toArray(ShamirShard[]::new);
+        final byte[] recoveredSecret = Shamir.recoverSecret(recoveredShards);
         assertEquals(bytes2Hex(secret), bytes2Hex(recoveredSecret));
 
-        ShamirShare[] badRecoveredShares = IntStream.range(0, recoveredShares.length)
+        ShamirShard[] badRecoveredShards = IntStream.range(0, recoveredShards.length)
                 .filter(i -> i != 0)
-                .mapToObj(i -> recoveredShares[i])
-                .toArray(ShamirShare[]::new);
-        final byte[] badRecoveredSecret = Shamir.recoverSecret(badRecoveredShares);
+                .mapToObj(i -> recoveredShards[i])
+                .toArray(ShamirShard[]::new);
+        final byte[] badRecoveredSecret = Shamir.recoverSecret(badRecoveredShards);
         assertNotEquals(bytes2Hex(secret), bytes2Hex(badRecoveredSecret));
 
     }
@@ -67,10 +67,10 @@ public class ShamirTest {
         assertThrows(ShamirException.class, () -> Shamir.splitSecret((short) 2, (short) 3, secret, null));
 
         assertThrows(ShamirException.class, () -> Shamir.recoverSecret(null));
-        assertThrows(ShamirException.class, () -> Shamir.recoverSecret(new ShamirShare[]{}));
-        assertThrows(ShamirException.class, () -> Shamir.recoverSecret(new ShamirShare[]{
-                new ShamirShare((short) 0, hex2Bytes("3dc2ff5b2a3b08193a2b1809a2b38091")),
-                new ShamirShare((short) 1, hex2Bytes("c7fe6b576e7f4c5df6e7d4c5e6f")),
-                new ShamirShare((short) 2, hex2Bytes("d2ba"))}));
+        assertThrows(ShamirException.class, () -> Shamir.recoverSecret(new ShamirShard[]{}));
+        assertThrows(ShamirException.class, () -> Shamir.recoverSecret(new ShamirShard[]{
+                new ShamirShard((short) 0, hex2Bytes("3dc2ff5b2a3b08193a2b1809a2b38091")),
+                new ShamirShard((short) 1, hex2Bytes("c7fe6b576e7f4c5df6e7d4c5e6f")),
+                new ShamirShard((short) 2, hex2Bytes("d2ba"))}));
     }
 }

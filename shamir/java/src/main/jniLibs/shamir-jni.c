@@ -38,7 +38,8 @@ static bool throw_new_shamir_exception(JNIEnv *env, char *msg) {
 
 JNIEXPORT jint JNICALL
 Java_com_bc_shamir_ShamirJni_split_1secret(JNIEnv *env, jclass clazz, jshort threshold,
-                                           jshort share_count, jbyteArray secret, jbyteArray output,
+                                           jshort shards_count, jbyteArray secret,
+                                           jbyteArray output,
                                            jobject random_func) {
     if (secret == NULL) {
         throw_new_shamir_exception(env, "secret is NULL");
@@ -55,13 +56,13 @@ Java_com_bc_shamir_ShamirJni_split_1secret(JNIEnv *env, jclass clazz, jshort thr
         return JNI_ERR;
     }
 
-    if (threshold < 0 || share_count < 0) {
-        throw_new_shamir_exception(env, "threshold or share_count is negative number");
+    if (threshold < 0 || shards_count < 0) {
+        throw_new_shamir_exception(env, "threshold or shards_count is negative number");
         return JNI_ERR;
     }
 
-    if (threshold > UINT8_MAX || share_count > UINT8_MAX) {
-        throw_new_shamir_exception(env, "threshold or share_count is too large");
+    if (threshold > UINT8_MAX || shards_count > UINT8_MAX) {
+        throw_new_shamir_exception(env, "threshold or shards_count is too large");
         return JNI_ERR;
     }
 
@@ -75,7 +76,7 @@ Java_com_bc_shamir_ShamirJni_split_1secret(JNIEnv *env, jclass clazz, jshort thr
     uint8_t *c_output = calloc(c_output_length, sizeof(uint8_t));
 
     int ret = split_secret((uint8_t) threshold,
-                           (uint8_t) share_count,
+                           (uint8_t) shards_count,
                            c_secret,
                            c_secret_length,
                            c_output,
@@ -92,16 +93,16 @@ Java_com_bc_shamir_ShamirJni_split_1secret(JNIEnv *env, jclass clazz, jshort thr
 
 JNIEXPORT jint JNICALL
 Java_com_bc_shamir_ShamirJni_recover_1secret(JNIEnv *env, jclass clazz, jshort threshold,
-                                             jbyteArray indexes, jobjectArray shares,
-                                             jint share_length,
+                                             jbyteArray indexes, jobjectArray shards,
+                                             jint shard_length,
                                              jbyteArray secret) {
     if (indexes == NULL) {
         throw_new_shamir_exception(env, "indexes is NULL");
         return JNI_ERR;
     }
 
-    if (shares == NULL) {
-        throw_new_shamir_exception(env, "shares is NULL");
+    if (shards == NULL) {
+        throw_new_shamir_exception(env, "shards is NULL");
         return JNI_ERR;
     }
 
@@ -120,16 +121,16 @@ Java_com_bc_shamir_ShamirJni_recover_1secret(JNIEnv *env, jclass clazz, jshort t
         return JNI_ERR;
     }
 
-    uint8_t **c_shares = to_uint8_t_2dimension_array(env, shares);
+    uint8_t **c_shards = to_uint8_t_2dimension_array(env, shards);
     uint8_t *c_indexes = to_uint8_t_array(env, indexes);
     jint c_secret_length = (*env)->GetArrayLength(env, secret);
     uint8_t *c_secret = calloc(c_secret_length, sizeof(uint8_t));
 
     int ret = recover_secret((uint8_t) threshold, c_indexes,
-                             (const uint8_t **) c_shares, (uint32_t) share_length, c_secret);
+                             (const uint8_t **) c_shards, (uint32_t) shard_length, c_secret);
     copy_to_jbyteArray(env, secret, c_secret, c_secret_length);
 
-    free(c_shares);
+    free(c_shards);
     free(c_secret);
     free(c_indexes);
 

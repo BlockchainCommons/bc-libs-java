@@ -13,7 +13,7 @@ class ShamirTest {
     fun testShamirValidFlow() {
         // test Shamir#splitSecret
         val secret = hex2Bytes("00112233445566778899aabbccddeeff")
-        val shares = Shamir.splitSecret(2, 3, secret) { len ->
+        val shards = Shamir.splitSecret(2, 3, secret) { len ->
             var b: Byte = 0
             val ret = ByteArray(len)
             for (i in 0 until len) {
@@ -28,18 +28,18 @@ class ShamirTest {
             "c7fe6b576e7f4c5df6e7d4c5e6f7c4d5",
             "d2bacc43a2b38091b9a89b8a2a3b0819"
         ).forEachIndexed { index, s ->
-            assertEquals(index.toShort(), shares[index].index)
-            assertEquals(s, bytes2Hex(shares[index].data))
+            assertEquals(index.toShort(), shards[index].index)
+            assertEquals(s, bytes2Hex(shards[index].data))
         }
 
         // test Shamir#recoverSecret
-        val recoveredShares = shares.toMutableList()
-        recoveredShares.removeAt(1)
-        val recoveredSecret = Shamir.recoverSecret(recoveredShares.toTypedArray())
+        val recoveredShards = shards.toMutableList()
+        recoveredShards.removeAt(1)
+        val recoveredSecret = Shamir.recoverSecret(recoveredShards.toTypedArray())
         assertEquals(bytes2Hex(secret), bytes2Hex(recoveredSecret))
 
-        recoveredShares.removeAt(0)
-        val badRecoveredSecret = Shamir.recoverSecret(recoveredShares.toTypedArray())
+        recoveredShards.removeAt(0)
+        val badRecoveredSecret = Shamir.recoverSecret(recoveredShards.toTypedArray())
         assertNotEquals(bytes2Hex(secret), bytes2Hex(badRecoveredSecret))
 
     }
@@ -62,9 +62,15 @@ class ShamirTest {
         assertThrows<ShamirException> {
             Shamir.recoverSecret(
                 arrayOf(
-                    ShamirShare(0, hex2Bytes("3dc2ff5b2a3b08193a2b1809a2b38091")),
-                    ShamirShare(1, hex2Bytes("c7fe6b576e7f4c5df6e7d4c5e6f")),
-                    ShamirShare(2, hex2Bytes("d2ba"))
+                    ShamirShard(
+                        0,
+                        hex2Bytes("3dc2ff5b2a3b08193a2b1809a2b38091")
+                    ),
+                    ShamirShard(
+                        1,
+                        hex2Bytes("c7fe6b576e7f4c5df6e7d4c5e6f")
+                    ),
+                    ShamirShard(2, hex2Bytes("d2ba"))
                 )
             )
         }

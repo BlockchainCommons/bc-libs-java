@@ -1,12 +1,12 @@
 package com.bc.shamir;
 
-public class ShamirShare {
+public class ShamirShard {
 
     private final byte[] data;
 
     private final short index;
 
-    public ShamirShare(short index, byte[] data) {
+    public ShamirShard(short index, byte[] data) {
         this.index = index;
         this.data = data;
     }

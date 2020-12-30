@@ -6,8 +6,8 @@ import java.util.Set;
 
 public class Shamir {
 
-    public static ShamirShare[] splitSecret(short threshold,
-                                            short shareCount,
+    public static ShamirShard[] splitSecret(short threshold,
+                                            short shardsCount,
                                             byte[] secret,
                                             RandomFunc randomFunc) {
         if (secret == null) {
@@ -18,61 +18,61 @@ public class Shamir {
             throw new ShamirException("randomFunc is NULL");
         }
 
-        if (threshold < 0 || shareCount < 0) {
-            throw new ShamirException("threshold or shareCount is negative number");
+        if (threshold < 0 || shardsCount < 0) {
+            throw new ShamirException("threshold or shardsCount is negative number");
         }
 
-        final byte[] output = new byte[secret.length * shareCount];
+        final byte[] output = new byte[secret.length * shardsCount];
 
-        int ret = ShamirJni.split_secret(threshold, shareCount, secret, output, randomFunc);
+        int ret = ShamirJni.split_secret(threshold, shardsCount, secret, output, randomFunc);
         if (ret <= 0) {
             throw new ShamirException("Shamir splitSecret error");
         }
 
-        ShamirShare[] shares = new ShamirShare[shareCount];
-        for (int i = 0; i < shareCount; i++) {
+        ShamirShard[] shards = new ShamirShard[shardsCount];
+        for (int i = 0; i < shardsCount; i++) {
             int offset = i * secret.length;
             byte[] data = Arrays.copyOfRange(output, offset, offset + secret.length);
-            shares[i] = new ShamirShare((short) i, data);
+            shards[i] = new ShamirShard((short) i, data);
         }
 
-        return shares;
+        return shards;
     }
 
-    public static byte[] recoverSecret(ShamirShare[] shares) {
-        if (shares == null) {
-            throw new ShamirException("shares is NULL");
+    public static byte[] recoverSecret(ShamirShard[] shards) {
+        if (shards == null) {
+            throw new ShamirException("shards is NULL");
         }
 
-        int sharesCount = shares.length;
-        if (sharesCount == 0) {
-            throw new ShamirException("No share is provided");
+        int shardsCount = shards.length;
+        if (shardsCount == 0) {
+            throw new ShamirException("No shards is provided");
         }
 
-        Set<Integer> shareLengths = new HashSet<>();
-        for (ShamirShare share : shares) {
-            shareLengths.add(share.getData().length);
+        Set<Integer> shardLengths = new HashSet<>();
+        for (ShamirShard shard : shards) {
+            shardLengths.add(shard.getData().length);
         }
-        if (shareLengths.size() != 1) {
-            throw new ShamirException("Shares don't all have the same length");
-        }
-
-        int shareLength = shareLengths.iterator().next();
-        byte[] indexes = new byte[sharesCount];
-        byte[][] sharesBytes = new byte[sharesCount][];
-
-        for (int i = 0; i < sharesCount; i++) {
-            indexes[i] = (byte) shares[i].getIndex();
-            sharesBytes[i] = shares[i].getData();
+        if (shardLengths.size() != 1) {
+            throw new ShamirException("Shards don't all have the same length");
         }
 
-        final byte[] secret = new byte[shareLength];
-        int ret = ShamirJni.recover_secret((short) sharesCount,
-                                           indexes,
-                                           sharesBytes,
-                                           shareLength,
-                                           secret);
-        if (ret != shareLength) {
+        int shardLength = shardLengths.iterator().next();
+        byte[] indexes = new byte[shardsCount];
+        byte[][] shardsBytes = new byte[shardsCount][];
+
+        for (int i = 0; i < shardsCount; i++) {
+            indexes[i] = (byte) shards[i].getIndex();
+            shardsBytes[i] = shards[i].getData();
+        }
+
+        final byte[] secret = new byte[shardLength];
+        int ret = ShamirJni.recover_secret((short) shardsCount,
+                indexes,
+                shardsBytes,
+                shardLength,
+                secret);
+        if (ret != shardLength) {
             throw new ShamirException("Shamir recoverSecret error");
         }
 
