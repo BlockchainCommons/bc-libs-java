@@ -5,15 +5,13 @@ This document gives the instruction for installing the Blockchain Commons SSKR J
 > We add utility script for installing all system dependencies, you can find it at `java/scripts/install_deps.sh`
 If you want to do it manually by yourself, make sure all of following dependencies are installed correctly.  
 
-[Adopt Open JDK 1.8](https://github.com/AdoptOpenJDK/openjdk8-binaries/releases) is recommended for both MacOS and Linux.
+[Adopt Open JDK 1.8](https://github.com/AdoptOpenJDK/openjdk8-binaries/releases) is recommended for both MacOS and Ubuntu.
 
-### Linux
+### Ubuntu (Well tested on 16.04 and 18.04)
 > Following packages can be installed via `apt-get`
 
 - automake
 - make
-- libc++-10-dev (or above)
-- libc++abi-10-dev (or above)
 - clang-10 (or above)
 
 ### MacOS
