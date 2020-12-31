@@ -7,7 +7,7 @@ source scripts/helper.sh
 echo 'Cleanup...'
 ./scripts/cleanup.sh
 
-PARENT_ROOT_DIR=../../
+PARENT_ROOT_DIR=$(cd ../..; pwd)
 LIB_NAME="libbc-sskr-jni.dylib"
 OUT_DIR=src/main/libs
 JNI_MD_DIR="darwin"
@@ -33,21 +33,23 @@ fi
 echo "${JAVA_HOME:?}"
 
 # Install bc-crypto-base
-pushd $PARENT_ROOT_DIR/deps/bc-crypto-base
+pushd "$PARENT_ROOT_DIR/deps/bc-crypto-base"
 ./configure
 make clean
 make CFLAGS=-fPIC check
 popd
 
 # Install bc-shamir
-pushd $PARENT_ROOT_DIR/deps/bc-shamir
+pushd "$PARENT_ROOT_DIR/deps/bc-shamir"
+export LIBRARY_PATH=$LIBRARY_PATH:$PARENT_ROOT_DIR/deps/bc-crypto-base/src
 ./configure
 make clean
 make CFLAGS=-fPIC check
 popd
 
 # Install bc-sskr
-pushd $PARENT_ROOT_DIR/deps/bc-sskr
+pushd "$PARENT_ROOT_DIR/deps/bc-sskr"
+export LIBRARY_PATH=$LIBRARY_PATH:$PARENT_ROOT_DIR/deps/bc-shamir/src
 ./configure
 make clean
 make CFLAGS=-fPIC check
@@ -63,10 +65,10 @@ $CC \
   -I"${PARENT_ROOT_DIR}/deps/bc-sskr/src" \
   -fexceptions -frtti -shared -fPIC \
   src/main/jniLibs/*.c \
-  $PARENT_ROOT_DIR/base-jni/*.c \
-  $PARENT_ROOT_DIR/deps/bc-sskr/src/libbc-sskr.a \
-  $PARENT_ROOT_DIR/deps/bc-shamir/src/libbc-shamir.a \
-  $PARENT_ROOT_DIR/deps/bc-crypto-base/src/libbc-crypto-base.a \
+  "$PARENT_ROOT_DIR"/base-jni/*.c \
+  "$PARENT_ROOT_DIR"/deps/bc-sskr/src/libbc-sskr.a \
+  "$PARENT_ROOT_DIR"/deps/bc-shamir/src/libbc-shamir.a \
+  "$PARENT_ROOT_DIR"/deps/bc-crypto-base/src/libbc-crypto-base.a \
   -o \
   $OUT_DIR/$LIB_NAME
 echo "Done. Checkout the release file at $OUT_DIR/$LIB_NAME"

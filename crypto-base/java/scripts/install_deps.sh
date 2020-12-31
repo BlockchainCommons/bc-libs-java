@@ -6,12 +6,15 @@ deps=(automake make)
 
 if ! is_osx; then
   # Additional dependencies for Linux
-  deps+=(wget libc++-10-dev libc++abi-10-dev)
+  deps+=(wget sudo unzip lsb-release software-properties-common apt-transport-https)
 fi
 
 echo "Checking and installing dependencies '${deps[*]}'..."
 
 # Check and install missing dependencies
+if ! is_osx; then
+  apt-get update
+fi
 for dep in "${deps[@]}"; do
   check_dep $dep
 done
