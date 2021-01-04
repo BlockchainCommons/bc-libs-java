@@ -5,9 +5,11 @@ This document gives the instruction for installing the Blockchain Commons Shamir
 > We add utility script for installing all system dependencies, you can find it at `java/scripts/install_deps.sh`
 If you want to do it manually by yourself, make sure all of following dependencies are installed correctly. 
 
-[Adopt Open JDK 1.8](https://github.com/AdoptOpenJDK/openjdk8-binaries/releases) is recommended for both MacOS and Ubuntu.
+[Adopt Open JDK 1.8](https://github.com/AdoptOpenJDK/openjdk8-binaries/releases) is recommended for both MacOS and Linux.
 
-### Ubuntu (Well tested on 16.04 and 18.04)
+### Linux
+> Well tested on Ubuntu 16.04, 18.04 and Debian 9, 10.
+
 > Following packages can be installed via `apt-get`
 
 - automake
@@ -44,7 +46,7 @@ $ ./gradlew clean assembleRelease
 ### Build native library
 Run following command for building the native library.
 ```console
-$ sudo ./scripts/build.sh
+$ sudo -E ./scripts/build.sh
 ```
 
 > The native library file would be found at `src/main/libs`. You need to install it into `java.library.path` for JVM can load it at runtime.
