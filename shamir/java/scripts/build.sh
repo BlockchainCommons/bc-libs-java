@@ -7,7 +7,12 @@ source scripts/helper.sh
 echo 'Cleanup...'
 ./scripts/cleanup.sh
 
-PARENT_ROOT_DIR=$(cd ../..; pwd)
+echo "${JAVA_HOME:?}"
+
+PARENT_ROOT_DIR=$(
+  cd ../..
+  pwd
+)
 LIB_NAME="libbc-shamir-jni.dylib"
 OUT_DIR=src/main/libs
 JNI_MD_DIR="darwin"
@@ -22,26 +27,16 @@ else
   export CXX="clang++-10"
 fi
 
-J_HOME="/usr/local/java/jdk8u265-b01"
-if is_osx; then
-  J_HOME=$(/usr/libexec/java_home 2>/dev/null)
-fi
-
-if [ -z "$JAVA_HOME" ]; then
-  export JAVA_HOME=$J_HOME
-fi
-echo "${JAVA_HOME:?}"
-
 # Install bc-crypto-base
 pushd "$PARENT_ROOT_DIR/deps/bc-crypto-base"
 ./configure
 make clean
 make CFLAGS=-fPIC check
+make CFLAGS=-fPIC install
 popd
 
 # Install bc-shamir
 pushd "$PARENT_ROOT_DIR/deps/bc-shamir"
-export LIBRARY_PATH=$LIBRARY_PATH:$PARENT_ROOT_DIR/deps/bc-crypto-base/src
 ./configure
 make clean
 make CFLAGS=-fPIC check
@@ -52,8 +47,8 @@ echo "Building $LIB_NAME..."
 mkdir -p $OUT_DIR
 $CC -I"$JAVA_HOME/include" \
   -I"$JAVA_HOME/include/$JNI_MD_DIR" \
-  -I"${PARENT_ROOT_DIR}/base-jni" \
-  -I"${PARENT_ROOT_DIR}/deps/bc-shamir/src" \
+  -I"$PARENT_ROOT_DIR/base-jni" \
+  -I"$PARENT_ROOT_DIR/deps/bc-shamir/src" \
   -fexceptions -frtti -shared -fPIC \
   src/main/jniLibs/*.c \
   "$PARENT_ROOT_DIR"/base-jni/*.c \

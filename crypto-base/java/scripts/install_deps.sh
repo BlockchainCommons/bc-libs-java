@@ -6,7 +6,7 @@ deps=(automake make)
 
 if ! is_osx; then
   # Additional dependencies for Linux
-  deps+=(wget sudo unzip lsb-release software-properties-common apt-transport-https)
+  deps+=(wget sudo unzip lsb-release software-properties-common apt-transport-https gnupg)
 fi
 
 echo "Checking and installing dependencies '${deps[*]}'..."
