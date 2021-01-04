@@ -14,7 +14,14 @@ If you want to do it manually by yourself, make sure all of following dependenci
 
 - automake
 - make
-- clang-10 (or above)
+
+Make sure you have llvm/clang installed with a minimum recommended version 10.
+
+```console
+$ wget https://apt.llvm.org/llvm.sh
+$ chmod +x llvm.sh
+$ sudo ./llvm.sh 10  # version 10
+```
 
 ### MacOS
 > Following packages can be installed via `brew`
@@ -46,7 +53,7 @@ $ ./gradlew clean assembleRelease
 ### Build native library
 Run following command for building the native library.
 ```console
-$ sudo -E ./scripts/build.sh
+$ JAVA_HOME="your/java/home" CC="clang-10" sudo -E ./scripts/build.sh
 ```
 
 > The native library file would be found at `src/main/libs`. You need to install it into `java.library.path` for JVM can load it at runtime.

@@ -5,6 +5,7 @@ set -e
 source scripts/helper.sh
 
 echo "${JAVA_HOME:?}"
+echo "${CC:?}"
 
 echo 'Cleanup...'
 ./scripts/cleanup.sh
@@ -16,16 +17,9 @@ PARENT_ROOT_DIR=$(
 LIB_NAME="libbc-crypto-base-jni.dylib"
 OUT_DIR=src/main/libs
 JNI_MD_DIR="darwin"
-if is_osx; then
-  export CC="clang"
-  export CXX="clang++"
-else
+if ! is_osx; then
   LIB_NAME="libbc-crypto-base-jni.so"
   JNI_MD_DIR="linux"
-
-  export CC="clang-10"
-  export CXX="clang++-10"
-
 fi
 
 # Install bc-crypto-base
