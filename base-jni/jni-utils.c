@@ -69,6 +69,12 @@ static void copy_to_jbyteArray(JNIEnv *env, jbyteArray dst, const uint8_t *src, 
     (*env)->ReleaseByteArrayElements(env, dst, jbytes, 0);
 }
 
+static jbyteArray create_jbyteArray(JNIEnv *env, const uint8_t *src, size_t src_len) {
+    jbyteArray dst = (*env)->NewByteArray(env, src_len);
+    copy_to_jbyteArray(env, dst, src, src_len);
+    return dst;
+}
+
 static void copy_to_jintArray(JNIEnv *env, jintArray dst, const size_t *src, size_t src_len) {
     jint count = (*env)->GetArrayLength(env, dst);
     if (count != src_len) {

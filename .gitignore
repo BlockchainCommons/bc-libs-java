@@ -103,5 +103,6 @@ output.json
 crypto-base/java/src/main/libs
 shamir/java/src/main/libs
 sskr/java/src/main/libs
+bip39/java/src/main/libs
 
 # End of Specific for project

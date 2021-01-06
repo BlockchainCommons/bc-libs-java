@@ -6,6 +6,7 @@ We use the following submodules so make sure you clone this repo correctly.
 - [bc-crypto-base](https://github.com/BlockchainCommons/bc-crypto-base)
 - [bc-shamir](https://github.com/BlockchainCommons/bc-shamir)
 - [bc-sskr](https://github.com/BlockchainCommons/bc-sskr)
+- [bc-bip39](https://github.com/BlockchainCommons/bc-bip39)
 
 Command to clone this repo along with all submodules
 ```console
@@ -19,5 +20,6 @@ $ git submodule update --recursive
 - [crypto-base](/crypto-base/INSTALLATION.md)
 - [shamir](/shamir/INSTALLATION.md)
 - [sskr](/sskr/INSTALLATION.md)
+- [bip39](/bip39/INSTALLATION.md)
 
 

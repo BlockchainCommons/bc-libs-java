@@ -7,3 +7,6 @@
 [submodule "deps/bc-shamir"]
 	path = deps/bc-shamir
 	url = git@github.com:BlockchainCommons/bc-shamir.git
+[submodule "deps/bc-bip39"]
+	path = deps/bc-bip39
+	url = git@github.com:BlockchainCommons/bc-bip39.git

@@ -28,6 +28,7 @@ This  `Blockchain Commons Java Library` project is either derived from or was in
 - [blockchain-commons/bc-crypto-base/](https://github.com/BlockchainCommons/bc-crypto-base) — Well-Reviewed and Audited Cryptographic Functions for Use in [Blockchain-Commons](https://github.com/BlockchainCommons) Software Projects.
 - [blockchain-commons/bc-shamir/](https://github.com/BlockchainCommons/bc-shamir) - Implementation of Shamir Secret Sharing for use in [Blockchain-Commons](https://github.com/BlockchainCommons) Software Projects.
 - [blockchain-commons/bc-sskr/](https://github.com/BlockchainCommons/bc-sskr) - Implementation of Shamir Secret Key Recovery (SSKR) for use in [Blockchain-Commons](https://github.com/BlockchainCommons) Software Projects.
+- [blockchain-commons/bc-bip39/](https://github.com/BlockchainCommons/bc-bip39) - Implementation of BIP-39 "Mnemonic code for generating deterministic keys" standard for use in [Blockchain-Commons](https://github.com/BlockchainCommons) Software Projects.
 
 ## Financial Support
 
