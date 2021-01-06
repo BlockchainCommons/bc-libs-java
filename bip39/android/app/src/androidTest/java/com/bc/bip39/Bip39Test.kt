@@ -13,11 +13,6 @@ import org.junit.runner.RunWith
 class Bip39Test {
 
     @Test
-    fun testIdentify() {
-        assertEquals("BIP39", Bip39.identify())
-    }
-
-    @Test
     fun testBIP39Word() {
         assertEquals("abandon", Bip39.word(0))
         assertEquals("leg", Bip39.word(1018))

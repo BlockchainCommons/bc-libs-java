@@ -8,10 +8,6 @@ import static com.bc.bip39.Bip39Jni.bip39_word_from_mnemonic;
 
 public class Bip39 {
 
-    public static String identify() {
-        return "BIP39";
-    }
-
     public static String word(int index) {
         return bip39_mnemonic_from_word(index);
     }

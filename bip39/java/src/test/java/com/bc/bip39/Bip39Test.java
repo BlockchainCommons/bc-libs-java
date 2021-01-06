@@ -14,11 +14,6 @@ import static org.junit.Assert.assertEquals;
 public class Bip39Test {
 
     @Test
-    public void testIdentify() {
-        assertEquals("BIP39", Bip39.identify());
-    }
-
-    @Test
     public void testBIP39Word() {
         assertEquals("abandon", Bip39.word(0));
         assertEquals("leg", Bip39.word(1018));
