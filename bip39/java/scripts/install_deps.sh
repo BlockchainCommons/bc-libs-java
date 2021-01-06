@@ -37,10 +37,12 @@ if ! is_osx; then
   if clang-10 --version 2>/dev/null; then
     echo "clang-10 already installed"
   else
+    pushd "$HOME"
     echo "Installing clang-10..."
     wget https://apt.llvm.org/llvm.sh
     chmod +x llvm.sh
     ./llvm.sh 10 || exit
     rm llvm.sh
+    popd
   fi
 fi
