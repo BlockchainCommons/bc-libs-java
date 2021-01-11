@@ -104,5 +104,6 @@ crypto-base/java/src/main/libs
 shamir/java/src/main/libs
 sskr/java/src/main/libs
 bip39/java/src/main/libs
+**/log
 
 # End of Specific for project
