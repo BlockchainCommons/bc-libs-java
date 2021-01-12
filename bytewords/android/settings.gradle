@@ -1,0 +1,4 @@
+rootProject.name = "bc-bytewords-android"
+include ":app"
+include ":bc-bytewords-java"
+project(":bc-bytewords-java").projectDir = file("../java")
