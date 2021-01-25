@@ -2,7 +2,7 @@
 This document gives the instruction for installing the Blockchain Commons Shamir Secret Sharing Java library.
 
 ## Dependencies
-> We add utility script for installing all system dependencies, you can find it at `java/scripts/install_deps.sh`
+> We add utility script for installing all system dependencies, you can find it at `<platform>/scripts/install_deps.sh`
 If you want to do it manually by yourself, make sure all of following dependencies are installed correctly. 
 
 [Adopt Open JDK 1.8](https://github.com/AdoptOpenJDK/openjdk8-binaries/releases) is recommended for both MacOS and Linux.
@@ -34,12 +34,12 @@ $ sudo ./llvm.sh 10  # version 10
 
 ### Testing
 ```console
-$ ./gradlew clean connectedDebugAndroidTest
+$ JAVA_HOME="your/java/home" ANDROID_SDK_ROOT="your/android-sdk/home" sudo -E ./gradlew clean connectedDebugAndroidTest
 ```
 
 ### Bundling
 ```console
-$ ./gradlew clean assembleRelease
+$ JAVA_HOME="your/java/home" ANDROID_SDK_ROOT="your/android-sdk/home" sudo -E ./gradlew clean assembleRelease
 ```
 
 > The `app-release.aar` file would be found in `app/build/outputs/aar`. You can compile it as a library in your project.
