@@ -24,7 +24,20 @@ copy_headers() {
 
   copy_headers
 
-  ./gradlew clean assembleRelease --info
-  echo "DONE. Checkout 'app/build/outputs/aar/app-release.aar'"
+  ./gradlew clean
+  OUTPUT=app/build/outputs/aar/app-release.aar
+  case $1 in
+  --test-only)
+    ./gradlew connectedDebugAndroidTest --info
+    ;;
+  --bundle-only)
+    ./gradlew assembleRelease --info
+    echo "DONE. Checkout '$OUTPUT'"
+    ;;
+  *)
+    ./gradlew connectedDebugAndroidTest assembleRelease --info
+    echo "DONE. Checkout '$OUTPUT'"
+    ;;
+  esac
 
 ) | tee "${BUILD_LOG}"

@@ -34,17 +34,15 @@ $ sudo ./llvm.sh 10  # version 10
 
 ### Testing
 ```console
-$ JAVA_HOME="your/java/home" ANDROID_SDK_ROOT="your/android-sdk/home" sudo -E ./gradlew clean connectedDebugAndroidTest
+$ JAVA_HOME="your/java/home" ANDROID_SDK_ROOT="your/android-sdk/home" sudo -E ./scripts/build.sh --test-only
 ```
 
 ### Bundling
 ```console
-$ JAVA_HOME="your/java/home" ANDROID_SDK_ROOT="your/android-sdk/home" sudo -E ./gradlew clean assembleRelease
+$ JAVA_HOME="your/java/home" ANDROID_SDK_ROOT="your/android-sdk/home" sudo -E ./scripts/build.sh --bundle-only
 ```
 
 > The `app-release.aar` file would be found in `app/build/outputs/aar`. You can compile it as a library in your project.
-
-> Notice that we distribute a prebuilt aar file at `prebuilt` directory.
 
 
 ## Java (Web app/ Desktop app)
