@@ -1,5 +1,5 @@
 package com.bc.sskr;
 
-interface RandomFunc {
+public interface RandomFunc {
     byte[] random(int len);
 }
